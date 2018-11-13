@@ -1,6 +1,7 @@
 import requests
 import re, os
 import datetime
+import base64
 from typing import List, Dict
 
 all_links_file = 'dawiki-latest-all-titles-in-ns0'
@@ -46,25 +47,16 @@ def isInBlacklist(link: str) -> bool:
 
     return False
 
-def clean_filename(name: str) -> str:
-    # <>:"/\|?*.
-    name = name.replace(r'<', 'GREATERTHAN')
-    name = name.replace(r'>', 'LESSTHAN')
-    name = name.replace(r':', 'COLON')
-    name = name.replace(r'"', 'QUOTE')
-    name = name.replace(r'/', 'SLASH')
-    name = name.replace(r'\\', 'BSLASH')
-    name = name.replace(r'|', 'BAR')
-    name = name.replace(r'?', 'QUESTIONMARK')
-    name = name.replace(r'*', 'STAR')
-    name = name.replace(r'.', 'DOT')
-
-    return name
+def get_filename(name: str) -> str:
+    return str(base64.b32encode(bytes(name, 'utf-8')))
 
 def save_links(page: str, links: List[str]):
-    filename = clean_filename(page)
+    filename = get_filename(page)
     with open(os.path.join('data/links', filename), 'w', encoding='utf-8') as f:
         f.writelines('\n'.join(links))
+
+if not os.path.exists('data/links'):
+    os.mkdir('data/links')
 
 with open(os.path.join('data', all_links_file), 'r', encoding='utf-8') as f:
     f.readline()
@@ -78,7 +70,3 @@ with open(os.path.join('data', all_links_file), 'r', encoding='utf-8') as f:
         if count % 100 == 0:
             now = datetime.datetime.now()
             print('Count {0} Time {1}'.format(count, now - start))
-
-# links = get_links(',')
-# print(links)
-
