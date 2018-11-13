@@ -32,7 +32,6 @@ def get_links(page: str) -> List[str]:
 def clean_links(content: Dict) -> List[str]:
     links = list(map(lambda x: x['*'], content['parse']['links']))
 
-    print(links)
     if len(links) == 1:
         return []
 
