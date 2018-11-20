@@ -31,7 +31,10 @@ def get_links(page: str) -> List[str]:
     return []
 
 def clean_links(content: Dict) -> List[str]:
-    links = list(map(lambda x: x['*'], content['parse']['links']))
+    try:
+        links = list(map(lambda x: x['*'], content['parse']['links']))
+    except:
+        return []
 
     if len(links) == 1:
         return []
@@ -58,10 +61,14 @@ def save_links(page: str, links: List[str]):
 if not os.path.exists('data/links'):
     os.mkdir('data/links')
 
+start_index = 0
+
 with open(os.path.join('data', all_links_file), 'r', encoding='utf-8') as f:
     f.readline()
     start = datetime.datetime.now()
-    for count, page in enumerate(f):
+    for _ in range(start_index):
+        f.readline()
+    for count, page in enumerate(f, start_index):
         page = page.strip()
         links = get_links(page)
         if not links == []:
