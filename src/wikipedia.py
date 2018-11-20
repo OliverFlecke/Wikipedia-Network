@@ -4,7 +4,9 @@ import datetime
 import base64
 from typing import List, Dict
 
+root = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 all_links_file = 'dawiki-latest-all-titles-in-ns0'
+links_path = os.path.join(root, 'data/links2')
 
 with open('data/blacklist_dk.txt', 'r', encoding='utf-8') as f:
     blacklist = f.readlines()
@@ -80,15 +82,15 @@ def save_links(page: str, links: List[str]):
     @param links: The links to save
     '''
     filename = get_filename(page)
-    with open(os.path.join('data/links', filename), 'w', encoding='utf-8') as f:
+    with open(os.path.join(links_path, filename), 'w', encoding='utf-8') as f:
         f.writelines('\n'.join(links))
 
-if not os.path.exists('data/links'):
-    os.mkdir('data/links')
+if not os.path.exists(links_path):
+    os.mkdir(links_path)
 
 start_index = 0
 
-with open(os.path.join('data', all_links_file), 'r', encoding='utf-8') as f:
+with open(os.path.join(root, 'data', all_links_file), 'r', encoding='utf-8') as f:
     f.readline()
     start = datetime.datetime.now()
     for _ in range(start_index):
