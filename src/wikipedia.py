@@ -15,6 +15,11 @@ with open('data/blacklist_dk.txt', 'r', encoding='utf-8') as f:
     ]
 
 def get_links(page: str) -> List[str]:
+    '''Get all the links between wikipedia pages from a gives page
+
+    @param page: Name of the page to get the links for
+    @return: The list of all the links of the given Wikipedia page
+    '''
     params = {
         'action': 'parse',
         'page': page,
@@ -31,6 +36,11 @@ def get_links(page: str) -> List[str]:
     return []
 
 def clean_links(content: Dict) -> List[str]:
+    '''Get the links from the content of a Wikipedia request and remove bad links
+
+    @param content: The JSON content from a request to the wikipedia API
+    @return: The cleaned list of links from the page
+    '''
     try:
         links = list(map(lambda x: x['*'], content['parse']['links']))
     except:
@@ -44,16 +54,31 @@ def clean_links(content: Dict) -> List[str]:
     ]
 
 def isInBlacklist(link: str) -> bool:
+    '''Checks if a links is blacklisted
+
+    @param link: The link to check
+    @return: True if the link is blacklisted
+    '''
     for regex in regex_blacklist:
         if regex.search(link):
             return True
 
     return False
 
-def get_filename(name: str) -> str:
-    return str(base64.b32encode(bytes(name, 'utf-8')))
+def get_filename(page: str) -> str:
+    '''Get the filename for a page in base32 format
+
+    @param page: Name of the page
+    @return: A file page that can be used on multiple OS
+    '''
+    return str(base64.b32encode(bytes(page, 'utf-8')))
 
 def save_links(page: str, links: List[str]):
+    '''Save links from a page to a file
+
+    @param page: Name of the page
+    @param links: The links to save
+    '''
     filename = get_filename(page)
     with open(os.path.join('data/links', filename), 'w', encoding='utf-8') as f:
         f.writelines('\n'.join(links))
