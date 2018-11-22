@@ -1,14 +1,15 @@
 import sys
+import os
+
+root = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
 
 # DTU's HPC won't install mrjob. Cloned repo and placed it locally
-sys.path.insert(0, '../mrjob')
+sys.path.insert(0, os.path.join(root, 'mrjob'))
 from mrjob.job import MRJob
 from mrjob.step import MRStep
 import mrjob.compat
 
-import os
-
-data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data')
+data_path = os.path.join(root, 'data')
 
 class AverageOutDegree(MRJob):
 
@@ -21,7 +22,7 @@ class AverageOutDegree(MRJob):
 
         yield 'Average degree', sum(value) / nodes
 
-names_file = os.path.join(data_path, 'test_names.txt')
+names_file = os.path.join(data_path, 'names.txt')
 nodes = sum(1 for _ in open(names_file))
 
 job = AverageOutDegree(args=[names_file, '--jobconf', 'nodes=' + str(nodes)])

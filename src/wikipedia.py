@@ -48,9 +48,6 @@ def clean_links(content: Dict) -> List[str]:
     except:
         return []
 
-    if len(links) == 1:
-        return []
-
     return [link for link in links
         if not isInBlacklist(link)
     ]
@@ -73,7 +70,7 @@ def get_filename(page: str) -> str:
     @param page: Name of the page
     @return: A file page that can be used on multiple OS
     '''
-    return str(base64.b32encode(bytes(page, 'utf-8')))
+    return str(base64.b32encode(bytes(page, 'utf-8')))[:255]
 
 def save_links(page: str, links: List[str]):
     '''Save links from a page to a file
@@ -88,7 +85,7 @@ def save_links(page: str, links: List[str]):
 if not os.path.exists(links_path):
     os.mkdir(links_path)
 
-start_index = 0
+start_index = 40300
 
 with open(os.path.join(root, 'data', all_links_file), 'r', encoding='utf-8') as f:
     f.readline()
