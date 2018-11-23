@@ -20,6 +20,7 @@ with open(os.path.join(root, 'data', 'dawiki-latest-all-titles-in-ns0'), 'r', en
     names = f.read().split('\n')
 
 redirects = {}
+pages = set()
 
 for name in names:
     filename = get_filename(name)
@@ -30,9 +31,10 @@ for name in names:
         if len(links) == 1:
             redirects[name] = links[0]
         else:
-            with open(os.path.join(root, 'data', 'pages.txt'), 'w', encoding='utf-8') as f:
+            with open(os.path.join(root, 'data', 'pages.txt'), 'a', encoding='utf-8') as f:
                 f.write(name + '\n')
 
 with open(os.path.join(root, 'data', 'redirects.json'), 'w') as f:
     json.dump(redirects, f)
 
+print('Finished finding all redirects')
