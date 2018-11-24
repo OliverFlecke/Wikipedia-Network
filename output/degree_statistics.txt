@@ -1,0 +1,4 @@
+Max degree: 5323
+Total number of links: 12179909
+Average degree: 50.67382124239159
+Min degree: 2
