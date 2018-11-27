@@ -24,29 +24,26 @@ class WikipediaGraph(MRJob):
     def mapper(self, _, line):
         index,name = line.split(",")[:2]
 
-        row = [0]*int(mrjob.compat.jobconf_from_env('nodes'))
-
+        row = set()
         name = name.replace("'","\'")
+
+        row.add(name)
+
         with open(main_path+"links/"+name,"r",encoding="utf-8") as file:
             for line in file:
                 if(line is not ""):
                     link_encoded = get_filename(line)
-                    row[self.get_index_of_file(link_encoded)] = 1
+                    row.add(link_encoded)
 
-        yield index,row
+        #with open(main_path + name, "w+", encoding="utf-8") as file:
+            #file.write("debug")
+
+        yield index,list(row)
 
     def steps(self):
         return [MRStep(mapper=self.mapper)]
 
-    def get_index_of_file(self, filename: str) -> int:
-        with open(main_path+"index_file", "r", encoding="utf-8") as file:
-            for line in file:
-                linesplit = line.split(",")
-                if(linesplit[0] == filename):
-                    return int(linesplit[1])
 
-            return -1
-        
         
 
 

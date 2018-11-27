@@ -15,16 +15,17 @@ def get_node_count() -> int:
 
 def create_and_store_graph():
     import tqdm
-    number_of_nodes = get_node_count()
 
-    mr_job = WikipediaGraph(args=["../data/index_file","--jobconf","nodes="+str(number_of_nodes)])
-    with open("../data/graph_file","w+",encoding="utf-8") as file:
-        with mr_job.make_runner() as runner:
-            runner.run()
-            for index,row in tqdm.tqdm(mr_job.parse_output(runner.cat_output())):
-                print(index)
-                file.write("index:"+str(row)+"\n")
+    #Clear file
+    with open("../data/graph_file", "w+", encoding="utf-8") as file:
+        file.write("")
 
+    mr_job = WikipediaGraph(args=["../data/index_file"])
+    with mr_job.make_runner() as runner:
+        runner.run()
+        for index,row in tqdm.tqdm(mr_job.parse_output(runner.cat_output())):
+            with open("../data/graph_file","a",encoding="utf-8") as file:
+                file.write(str(row)+"\n")
 
 
 if __name__ == '__main__':
