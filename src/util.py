@@ -9,3 +9,7 @@ def get_filename(name: str) -> str:
     '''
     return str(base64.b32encode(bytes(name, 'utf-8')))[:255]
 
+
+def get_root() -> str:
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+

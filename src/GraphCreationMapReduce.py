@@ -12,6 +12,14 @@ import mrjob.compat
 
 main_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'../data/')
 
+indexes = {}
+
+with open(os.path.join(main_path, 'pages.txt'), 'r', encoding='utf-8') as f:
+    counter = 0
+    for line in f:
+        indexes[line.rstrip('\n')] = counter
+        counter += 1
+
 class GraphCounter(MRJob):
     def mapper(self,_,line):
         yield (None,1)
@@ -21,34 +29,19 @@ class GraphCounter(MRJob):
 
 class WikipediaGraph(MRJob):
 
-    def mapper(self, _, line):
-        index,name = line.split(",")[:2]
-
+    def mapper(self, _, name):
         row = set()
-        name = name.replace("'","\'")
+        filename = get_filename(name)
 
-        row.add(name)
-
-        with open(main_path+"links/"+name,"r",encoding="utf-8") as file:
+        with open(main_path+"links/" + filename,"r",encoding="utf-8") as file:
             for line in file:
-                if(line is not ""):
-                    link_encoded = get_filename(line)
-                    row.add(link_encoded)
+                line = line.rstrip()
+                if line in indexes:
+                    row.add(indexes[line])
 
-        #with open(main_path + name, "w+", encoding="utf-8") as file:
-            #file.write("debug")
-
-        yield index,list(row)
+        yield indexes[name], list(row)
 
     def steps(self):
         return [MRStep(mapper=self.mapper)]
-
-
-        
-
-
-
-
-
 
 #name,number
