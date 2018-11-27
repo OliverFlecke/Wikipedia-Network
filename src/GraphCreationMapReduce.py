@@ -1,8 +1,9 @@
 import sys
 import os
+from util import get_filename
 
 # DTU's HPC won't install mrjob. Cloned repo and placed it locally
-lf os.path.isdir('../mrjob'):
+if os.path.isdir('../mrjob'):
     sys.path.insert(0, '../mrjob')
 
 from mrjob.job import MRJob
@@ -21,8 +22,6 @@ class GraphCounter(MRJob):
 class WikipediaGraph(MRJob):
 
     def mapper(self, _, line):
-        import base64
-
         index,name = line.split(",")[:2]
 
         row = [0]*int(mrjob.compat.jobconf_from_env('nodes'))
@@ -31,7 +30,7 @@ class WikipediaGraph(MRJob):
         with open(main_path+"links/"+name,"r",encoding="utf-8") as file:
             for line in file:
                 if(line is not ""):
-                    link_encoded = str(base64.b32encode(bytes(line, 'utf-8')))
+                    link_encoded = get_filename(line)
                     row[self.get_index_of_file(link_encoded)] = 1
 
         yield index,row
@@ -47,6 +46,8 @@ class WikipediaGraph(MRJob):
                     return int(linesplit[1])
 
             return -1
+        
+        
 
 
 
