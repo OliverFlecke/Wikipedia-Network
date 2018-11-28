@@ -99,7 +99,6 @@ def find_shortest_path(start_node: int):
         for key, value in nodes.items():
             file.write(f'{key},{value}\n')
 
-    prev = 0
     current = 0
     print(f'Searching from node {start_node}')
     print(f'Start {datetime.now()}')
@@ -117,16 +116,15 @@ def find_shortest_path(start_node: int):
                     f.write(f'{key},({dist}, {path}, {state})\n')
                     if state == UNVISITED or state == FRONTIER:
                         done = False
-                    else:
+                    if state == FRONTIER:
                         current += 1
 
         print(f'{round} completed')
         
-        if current == prev:
-            print('No more changes, stopping')
+        if current == 0:
+            print('No more nodes on the frontier, stopping')
             break
 
-        prev = current
         current = 0
 
         if done:
@@ -134,5 +132,5 @@ def find_shortest_path(start_node: int):
 
     print(f'Done {datetime.now()}')
 
-for node in list(neighbors.keys())[1:]:
+for node in list(neighbors.keys()):
     find_shortest_path(node)
