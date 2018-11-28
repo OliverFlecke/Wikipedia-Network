@@ -1,4 +1,5 @@
 from GraphCreationMapReduce import *
+import json
 
 def create_index_file():
     import os
@@ -20,14 +21,13 @@ def create_and_store_graph():
     with open("../data/graph_file", "w+", encoding="utf-8") as file:
         file.write("")
 
-    mr_job = WikipediaGraph(args=["../data/index_file"])
+    mr_job = WikipediaGraph(args=["../data/pages.txt"])
     with mr_job.make_runner() as runner:
         runner.run()
-        for index,row in tqdm.tqdm(mr_job.parse_output(runner.cat_output())):
+        for index,row in mr_job.parse_output(runner.cat_output()):
             with open("../data/graph_file","a",encoding="utf-8") as file:
-                file.write(str(row)+"\n")
-
+                file.write(f'{index}:{row}\n') 
 
 if __name__ == '__main__':
-    create_index_file()
+    #create_index_file()
     create_and_store_graph()
