@@ -96,7 +96,8 @@ def find_shortest_path(start_node: int):
     if not os.path.exists(directory):
         os.mkdir(directory)
 
-    with open(os.path.join(directory, str(round)), 'w', encoding='utf-8') as file:
+    current_file = os.path.join(directory, 'data') 
+    with open(current_file, 'w', encoding='utf-8') as file:
         for key, value in nodes.items():
             file.write(f'{key},{value}\n')
 
@@ -104,17 +105,15 @@ def find_shortest_path(start_node: int):
     print(f'Searching from node {start_node}')
     print(f'Start {datetime.now()}')
 
-
     while True:
         while True:
             done = True
-            current_file = os.path.join(directory, str(round))
             print(current_file)
             job = Subgraphs(args=[current_file])
             with job.make_runner() as runner:
                 runner.run()
                 round += 1
-                with open(os.path.join(directory, str(round)), 'w', encoding='utf-8') as f:
+                with open(current_file, 'w', encoding='utf-8') as f:
                     for key, row in job.parse_output(runner.cat_output()):
                         subgraph_no, state = row
                         f.write(f'{key},({subgraph_no}, {state})\n')
@@ -138,7 +137,7 @@ def find_shortest_path(start_node: int):
 
         all_subgraphs_found = True
 
-        with open(os.path.join(directory, str(round)), 'r', encoding='utf-8') as f:
+        with open(current_file, 'r', encoding='utf-8') as f:
             for line in f:
                 m = re.match(regex, str(line))
                 key = int(m.group('key'))
@@ -146,7 +145,7 @@ def find_shortest_path(start_node: int):
 
                 if(state == UNVISITED):
                     print(line)
-                    with open(os.path.join(directory, str(round)), 'a', encoding='utf-8') as f:
+                    with open(current_file, 'a', encoding='utf-8') as f:
                         f.write(f'{key},({subgraph_no_counter}, {FRONTIER})\n')
                     all_subgraphs_found = False
                     break
