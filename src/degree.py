@@ -30,7 +30,7 @@ class AverageOutDegree(MRJob):
 
             yield 'Total number of links', total_links
             yield 'Average degree', total_links / nodes
-        
+
         elif key == 'max':
             yield 'Min degree', min(list(values))
         elif key == 'min':
