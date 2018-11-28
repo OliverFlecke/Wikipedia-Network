@@ -19,11 +19,18 @@ class AverageInDegree(MRJob):
             for link in f:
                 yield link.strip(), 1
 
-    def combiner(self, _, values):
-        yield 'links_in', sum(values)
+    def reducer_sum(self, link, values):
+        yield 'link_in', sum(values)
 
-    def reducer(self, link, values):
+    def reducer_freq(self, link, values):
         yield 'degrees', dict(Counter(values))
+
+    def steps(self):
+        return [
+            MRStep(mapper=self.mapper,
+                reducer=self.reducer_sum),
+            MRStep(reducer=self.reducer_freq)
+        ]
 
 names_file = os.path.join(data_path, 'pages.txt')
 
