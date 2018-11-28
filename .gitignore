@@ -1,3 +1,4 @@
 data/
 mrjob/
 src/__pycache__/
+.vscode/
