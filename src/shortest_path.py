@@ -88,7 +88,7 @@ def find_shortest_path(start_node: int):
         index: (sys.maxsize, [index], UNVISITED)
         for index in neighbors.keys()
     }
-    nodes[start_node] = (0, [0], FRONTIER)
+    nodes[start_node] = (0, [start_node], FRONTIER)
 
     round = 0
     directory = os.path.realpath(os.path.join(get_root(), 'output/shortest', str(start_node)))
@@ -132,5 +132,4 @@ def find_shortest_path(start_node: int):
 
     print(f'Done {datetime.now()}')
 
-for node in list(neighbors.keys()):
-    find_shortest_path(node)
+find_shortest_path(0)
