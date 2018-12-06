@@ -1,4 +1,4 @@
-from GraphCreationMapReduce import *
+from graph_creation_mr import *
 import json
 
 def create_index_file():
