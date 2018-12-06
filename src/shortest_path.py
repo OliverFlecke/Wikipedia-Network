@@ -132,4 +132,5 @@ def find_shortest_path(start_node: int):
 
     print(f'Done {datetime.now()}')
 
-find_shortest_path(0)
+node = int(sys.argv[1])
+find_shortest_path(node)

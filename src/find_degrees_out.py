@@ -27,8 +27,9 @@ job = AverageOutDegree(args=[names_file])
 with job.make_runner() as runner:
     runner.run()
     with open(os.path.join(get_root(), 'output', 'degrees_out_frequency.csv'), 'w', encoding='utf-8') as f:
-        writer = csv.writer(f, delimiter='|')
+        writer = csv.writer(f, delimiter=',')
         for index, degrees in job.parse_output(runner.cat_output()):
+            writer.writerow(('Degree', 'Count')
             for row in sorted(degrees.items(), key=lambda x: int(x[0])):
                 writer.writerow(row)
 
