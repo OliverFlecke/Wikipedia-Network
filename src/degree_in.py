@@ -1,16 +1,13 @@
 import sys
 import os
-
-root = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+from util import get_filename,get_root
 
 # DTU's HPC won't install mrjob. Cloned repo and placed it locally
-sys.path.insert(0, os.path.join(root, 'mrjob'))
+sys.path.insert(0, os.path.join(get_root(), 'mrjob'))
 from mrjob.job import MRJob
-from mrjob.step import MRStep
-import mrjob.compat
-from util import get_filename
 
-data_path = os.path.join(root, 'data')
+
+data_path = os.path.join(get_root(), 'data')
 
 class DegreeIn(MRJob):
 
